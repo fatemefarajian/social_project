@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h1>ورود</h1>
+<p>لطفا اطلاعات خود را جهت ورود به وب سایت وارد کنید...</p>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="hidden" name="next" value="{{next}}">
+    <input type="submit" value="ورود">
+</form>
+
+
+</body>
+</html>

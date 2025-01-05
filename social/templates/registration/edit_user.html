@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+<h1>ویرایش اطلاعات شخصی </h1>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{user_form.as_p}}
+    <input type="submit" value="ذخیره">
+</form>
+</body>
+</html>

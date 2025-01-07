@@ -39,3 +39,8 @@ def edit_user(request):
         user_form = UserEditForm(instance=request.user)
 
     return render(request, 'registration/edit_user.html', {'user_form': user_form})
+
+
+def ticket(request):
+    pass
+

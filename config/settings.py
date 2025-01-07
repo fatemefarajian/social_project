@@ -31,13 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'social.apps.SocialConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'social.apps.SocialConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'social.authentication.PhoneAuthBackend'
 ]
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'social.NetVibe@gmail.com'
+EMAIL_HOST_PASSWORD = 'qcmv iqkt cdzg tjfq'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

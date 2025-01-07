@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, logout
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.mail import send_mail
 from .forms import *
 
 
@@ -42,5 +43,19 @@ def edit_user(request):
 
 
 def ticket(request):
-    pass
+    sent = False
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            message = f"{cd['name']}\n {cd['email']}\n {cd['phone']}\n {cd['message']}"
+            send_mail(cd['subject'], message, 'social.NetVibe.com',
+                      ['fatemefarajian1374@gmail.com'], fail_silently=False)
+            sent = True
+
+    else:
+        form = TicketForm()
+
+    return render(request, 'forms/ticket.html', {'form': form, 'sent': sent})
+
 

@@ -23,5 +23,7 @@ urlpatterns = [
     path('posts/', views.post_list, name='list'),
     path('posts/,<slug:tag_slug>/', views.post_list, name='post_list_by_tag'),
     path('posts/detail/<int:pk>/', views.post_detail, name='detail'),
+    path('posts/create_post/', views.create_post, name='create_post'),
+    path('posts/edit_post/<post_id>/', views.edit_post, name='edit_post'),
 
 ]

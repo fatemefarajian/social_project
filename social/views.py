@@ -76,11 +76,39 @@ def post_list(request, tag_slug=None):
     return render(request, 'social/list.html', context)
 
 
-
-
-
-
-
 def post_detail(request, pk):
     post = get_object_or_404(Post, id=pk)
     return render(request, 'social/detail.html', {'post': post})
+
+
+def create_post(request):
+    if request.method == 'POST':
+        form = CreationPostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            return redirect('social:profile')
+    else:
+        form = CreationPostForm()
+    return render(request, 'forms/create_post.html', {'form': form})
+
+
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        form = CreationPostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            return redirect('social:profile')
+    else:
+        form = CreationPostForm(instance=post)
+    return render(request, 'forms/create_post.html', {'form': form})
+
+
+
+

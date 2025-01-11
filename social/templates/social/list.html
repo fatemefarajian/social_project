@@ -7,7 +7,7 @@
 <body>
 <h1>پست ها</h1>
 {% if tag %}
-<h2>posts tagged with{{tag.name}}</h2>
+<h2>posts tagged with"{{tag.name}}"</h2>
 {% endif %}
 {% for post in posts %}
 <h3><a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:5 }}</a></h3>

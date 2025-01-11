@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Post
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -79,4 +79,10 @@ class TicketForm(forms.Form):
                 raise forms.ValidationError('شماره تلفن باید 11 عدد باشد')
             else:
                 return phone
+
+
+class CreationPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['description', 'tags']
 

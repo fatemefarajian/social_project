@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate, logout
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import send_mail
 from .forms import *
+from .models import Post
+from taggit.models import Tag
 
 
 def log_out(request):
@@ -59,3 +61,26 @@ def ticket(request):
     return render(request, 'forms/ticket.html', {'form': form, 'sent': sent})
 
 
+def post_list(request, tag_slug=None):
+    posts = Post.objects.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        posts = posts.filter(tags__in=[tag])
+    context = {
+        'posts': posts,
+        'tag': tag,
+
+    }
+
+    return render(request, 'social/list.html', context)
+
+
+
+
+
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    return render(request, 'social/detail.html', {'post': post})

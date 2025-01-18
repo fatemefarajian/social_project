@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+</head>
+<body>
+{% if query %}
+<h2>نتایج جست و جو برای : {{query}}</h2>
+<p>تعداد نتایج:{{results.count}}</p>
+{% endif %}
+{% for post in results %}
+<p><a href="{{post.get_absolute_url}}">{{post.description}}</a></p>
+<p>{{post.tags}}</p>
+{% empty %}
+<p>هیچ نتیجه ای یافت نشد!...</p>
+{% endfor %}
+
+</body>
+</html>

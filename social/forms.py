@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Post
+from .models import User, Post, Comment
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -82,7 +82,19 @@ class TicketForm(forms.Form):
 
 
 class CreationPostForm(forms.ModelForm):
+    image1 = forms.ImageField(label='تصویر اول')
+    image2 = forms.ImageField(label='تصویر دوم')
+
     class Meta:
         model = Post
         fields = ['description', 'tags']
 
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=100)
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']

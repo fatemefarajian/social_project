@@ -5,11 +5,31 @@
     <title>Create Post</title>
 </head>
 <body>
-<h1>ایجاد پست</h1>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.as_p}}
-    <input type="submit" value="ذخیره">
+    {% if post %}
+        {% for image in post.images.all %}
+            <img src="{{image.image_file.url}}" alt="{{image.title}}" style="width: 150px; height: 200px">
+            <a href="{% url 'blog:delete_image' image.id %}">حذف تصویر</a>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <br>
+    <input type="submit" value="ثبت پست">
 </form>
+{% if form.errors %}
+ {%for field in form %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p>{{ field.label }}:{{ error }}</p>
+            {% endfor %}
+        {% endif%}
+    {% endfor %}
+{% endif %}
+
+{% if form.non_field_errors %}
+{{form.non_field_errors}}
+{% endif %}
 </body>
 </html>

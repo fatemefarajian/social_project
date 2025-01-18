@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Post
+from .models import *
 from django.contrib.auth.admin import UserAdmin
 
 
@@ -11,3 +11,13 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['author', 'description', 'created']
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['name', 'text', 'created', 'active']
+
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['post', 'created', 'title']

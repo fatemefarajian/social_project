@@ -5,10 +5,39 @@
     <title>Detail</title>
 </head>
 <body>
+{% for image in post.images.all %}
+<img src="{{image.image_file.url}}" alt="{{image.title}}" style="width: 150px; height: 200px">
+{% endfor %}
 <p>{{ post.description|linebreaks }}</p>
 <p>{{ post.author }}</p>
 
 <p>published at: {{post.created}}</p>
+<p><a href="{% url 'social:delete_post' post.id %}">حذف پست</a></p>
+<p><a href="{% url 'social:edit_post' post.id %}">ویرایش پست</a></p>
+<div>
+    {% with comments.count as cm_count %}
+
+    {{ cm_count }} comment {{ cm_count | pluralize }}
+{% endwith %}
+</div>
+<br>
+<h2>نظرات</h2>
+<br>
+{% for cm in comments %}
+<h4>{{cm.name}}:</h4>
+
+<p>{{cm.text |linebreaks  }}</p>
+{% empty %}
+برای این پست نظری وجود ندارد!
+{% endfor %}
+<h4>نظر خود را وارد کنید</h4>
+
+<form action="{% url 'social:comments' post.id %}" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="ثبت نظر">
+
+</form>
 
 </body>
 </html>

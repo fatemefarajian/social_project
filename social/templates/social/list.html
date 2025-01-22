@@ -20,7 +20,7 @@
 {% endif %}
 {% for post in posts %}
  {% if post.images.count > 0 %}
-        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title}}" class="post-image">
+        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title}}" style="width: 450px ; height: 300px">
         {% endif %}
 <br>
 <h3><a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:5 }}</a></h3>

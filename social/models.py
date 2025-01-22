@@ -27,7 +27,7 @@ class Post(models.Model):
         verbose_name_plural = 'پست ها'
 
     def __str__(self):
-        return self.description
+        return self.description[:20]
 
     def get_absolute_url(self):
         return reverse('social:detail', args=[self.id])

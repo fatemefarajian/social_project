@@ -120,6 +120,7 @@ def post_comment(request, post_id):
     return render(request, 'forms/comments.html', context)
 
 
+@login_required
 def create_post(request):
     if request.method == 'POST':
         form = CreationPostForm(request.POST, request.FILES)
@@ -136,6 +137,7 @@ def create_post(request):
     return render(request, 'forms/create_post.html', {'form': form})
 
 
+@login_required
 def edit_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
@@ -153,6 +155,14 @@ def edit_post(request, post_id):
     return render(request, 'forms/create_post.html', {'form': form})
 
 
+@login_required
+def delete_image(request, img_id):
+    image = get_object_or_404(Image, id=img_id)
+    image.delete()
+    return redirect('social:detail')
+
+
+@login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':

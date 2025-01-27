@@ -6,8 +6,9 @@
 </head>
 <body>
 {% if sent %}
-<h2>ایمیل شما با موفقیت به پشتیبانی ارسال شد</h2>
-{% endif %}
+    <h2>ایمیل شما با موفقیت به پشتیبانی ارسال شد</h2>
+<p><a href="{% url 'social:list' %}">بازگشت به صفحه ی اصلی </a></p>
+{% else %}
 <h1>ارسال تیکت به پشتیبانی</h1>
 <form action="" method="post">
     {% csrf_token %}
@@ -16,7 +17,7 @@
     {% if form.name.value %} value="{{form.name.value}}"{% endif %}>
     <br>
        ایمیل:
-    <input type="email" name="email" required
+    <input type="email" name="email"
     {% if form.email.value %} value="{{form.email.value}}"{% endif %}>
     <br>
        شماره تماس:
@@ -58,6 +59,7 @@
 
 {% if form.non_field_errors %}
 {{form.non_field_errors}}
+{% endif %}
 {% endif %}
 </body>
 </html>

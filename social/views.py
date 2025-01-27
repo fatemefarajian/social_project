@@ -167,7 +167,7 @@ def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     if request.method == 'POST':
         post.delete()
-        return redirect('social:delete_post_success')
+        return redirect('social:list')
 
     return render(request, 'forms/delete_post.html', {'post': post})
 
@@ -188,4 +188,4 @@ def post_search(request):
             'query': query,
             'results': results,
             }
-    return render(request, 'social/search.html', context)
+    return render(request, 'forms/search.html', context)

@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>List</title>
-</head>
-<body>
-<div><form action="{% url 'social:search'%}" method="get">
+<div>
+    <form action="{% url 'social:search'%}" method="get">
     {% csrf_token %}
 
     <input type="text" name="query" placeholder="لطفا کلمه مورد نظر را وارد کنید..">
@@ -13,16 +7,19 @@
     <input type="submit" value="جست و جو">
 </form>
 </div>
+
 <h3><a href="{% url 'social:create_post' %}">ایجاد پست جدید</a></h3>
 <h1>پست ها</h1>
 {% if tag %}
-<h2>posts tagged with"{{tag.name}}"</h2>
+<h2>posts tagged with "{{tag.name}}"</h2>
 {% endif %}
+<div class="post-list">
 {% for post in posts %}
- {% if post.images.count > 0 %}
-        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title}}" style="width: 450px ; height: 300px">
+    {% if post.images.count > 0 %}
+        <img src="{{post.images.first.image_file.url}}" alt="{{post.images.first.title}}" style="width: 350px ; height: 300px">
         {% endif %}
 <br>
+
 <h3><a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:5 }}</a></h3>
 <p>by:{{post.author}}</p>
 
@@ -31,7 +28,24 @@
     {% if not forloop.last %}, {% endif %}
     {% endfor %}
 <br>
+<hr>
 {% endfor %}
-{% include "partials/paginations.html" with page_obj=posts %}
-</body>
-</html>
+</div>
+<button id="load-more">بارگزاری پست های بیشتر</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).ready(function (){
+        var page=2;
+        $('#load-more').click(function () {
+            $.ajax({
+                type:'GET',
+                url : "{% if tag %}{% url 'social:post_list_by_tag' tag.slug %}{% else %}{% url 'social:list' %}{% endif %}" + "?page=" + page,
+                dataType : 'html',
+                success :function (data) {
+                    $('.post-list').append(data);
+                    page += 1;
+                }
+            });
+        });
+    });
+</script>

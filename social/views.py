@@ -1,5 +1,6 @@
 from django.contrib.postgres.search import TrigramSimilarity
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Count
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, logout
@@ -66,18 +67,23 @@ def ticket(request):
 
 def post_list(request, tag_slug=None):
     posts = Post.objects.all()
-    paginator = Paginator(posts, 1)
-    page_number = request.GET.get('page', 1)
-    try:
-        posts = paginator.page(page_number)
-    except PageNotAnInteger:
-        posts = paginator.page(1)
-    except EmptyPage:
-        posts = paginator.page(paginator.num_pages)
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
-        posts = posts.filter(tags__in=[tag])
+        posts = Post.objects.filter(tags__in=[tag])
+
+    page = request.GET.get('page')
+    paginator = Paginator(posts, 2)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = []
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return render(request, 'social/list_ajax.html', {'posts': posts})
+
     context = {
         'posts': posts,
         'tag': tag,
@@ -89,16 +95,15 @@ def post_list(request, tag_slug=None):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, id=pk)
-    comments = post.comments.filter(active=True)
-    form = CommentForm
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_post = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_post = similar_post.annotate(same_tags=Count('tags')).order_by('-same_tags', '-created')[:4]
     context = {
-
         'post': post,
-        'form': form,
-        'comments': comments,
+        'similar_post': similar_post,
+        'form': CommentForm()
     }
-
-    return render(request, 'social/detail.html', context)
+    return render(request, "social/detail.html", context)
 
 
 @require_POST

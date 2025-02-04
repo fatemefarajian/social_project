@@ -12,15 +12,18 @@
             Like
         {% endif%}
     </button>
-
     <span class="likes-count">
     {% with post.likes.count as like_count %}
         {{ like_count }} Like{{ like_count|pluralize }}
     {% endwith %}
-
-    </span>
-
-
+    </span>/
+<button class="save-button">
+        {% if request.user in post.saved_by.all %}
+           remove
+        {% else %}
+            Save
+        {% endif%}
+    </button>
 </div>
 
 <p>published at: {{post.created}}</p>
@@ -88,6 +91,25 @@
 
             });
 
+        });
+
+        $(".save-button").click(function () {
+            var button = $(this);
+            $.ajax({
+                type: "POST",
+                url: "/save_post/",
+                data: { 'csrfmiddlewaretoken': '{{ csrf_token }}', 'post_id': '{{post.id}}'},
+                success: function (data) {
+                    if (data.saved) {
+                        button.text("remove");
+                    } else {
+                        button.text("save");
+                    }
+                },
+                error: function (error) {
+                    console.log("خطا در ارسال درخواست Ajax: " + error);
+                }
+            });
         });
 
     });

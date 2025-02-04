@@ -29,6 +29,7 @@ urlpatterns = [
     path('posts/delete_post/<post_id>/', views.delete_post, name='delete_post'),
     path('search/', views.post_search, name='search'),
     path('like_post/', views.like_post, name='like_post'),
+    path('save_post/', views.save_post, name='save_post'),
 
 
 ]

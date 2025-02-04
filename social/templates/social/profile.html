@@ -1,0 +1,6 @@
+<h2>:پست های ذخیره شده توسط شما</h2>
+{%for post in saved_posts %}
+<h3><a href="{{ post.get_absolute_url }}">{{ post.description|truncatewords:5 }}</a></h3>
+<p>by:{{post.author}}</p>
+<hr>
+{% endfor %}

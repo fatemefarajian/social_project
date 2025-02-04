@@ -11,6 +11,16 @@ class User(AbstractUser):
     bio = models.TextField(null=True, blank=True, verbose_name='بیوگرافی')
     job = models.CharField(max_length=100, null=True, blank=True, verbose_name='شغل')
     phone = models.CharField(max_length=11, verbose_name='تلفن همراه', null=True, blank=True, unique=True)
+    following = models.ManyToManyField('self', through='Contact', related_name="followers", symmetrical=False)
+
+    def get_absolute_url(self):
+        return reverse('social:user_detail', args=[self.username])
+
+    def get_followers(self):
+        return [contact.user_from for contact in self.rel_to_set.all().order_by('-created')]
+
+    def get_followings(self):
+        return [contact.user_to for contact in self.rel_from_set.all().order_by('-created')]
 
 
 class Post(models.Model):
@@ -18,25 +28,46 @@ class Post(models.Model):
     description = models.TextField(verbose_name='توضیحات')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    likes = models.ManyToManyField(User, related_name='like_posts', blank=True)
+    saved_by = models.ManyToManyField(User, related_name='saved_posts', blank=True)
+    total_likes = models.PositiveIntegerField(default=0)
+    total_saves = models.PositiveIntegerField(default=0)
+    active = models.BooleanField(default=True)
     tags = TaggableManager()
 
     class Meta:
         ordering = ['-created']
-        indexes = [models.Index(fields=['created'])]
+        indexes = [models.Index(fields=['-created'])]
+        models.Index(fields=['-total_likes'])
         verbose_name = 'پست'
         verbose_name_plural = 'پست ها'
 
     def __str__(self):
-        return self.description[:20]
+        return self.author.first_name + ": " + self.description[:10] + '...'
 
     def get_absolute_url(self):
         return reverse('social:detail', args=[self.id])
 
     def delete(self, *args, **kwargs):
         for img in self.images.all():
-            storage, path = img.image_file.storage, img.image_file.path
+            storage, path = img.image_file.storage , img.image_file.path
             storage.delete(path)
         super().delete(*args, **kwargs)
+
+
+class Contact(models.Model):
+    user_from = models.ForeignKey(User, related_name='rel_from_set',on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name='rel_to_set', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f"{self.user_from} follows {self.user_to}"
 
 
 class Image(models.Model):
@@ -73,7 +104,7 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-created']
-        indexes = [models.Index(fields=['created'])]
+        indexes = [models.Index(fields=['-created'])]
         verbose_name = 'کامنت'
         verbose_name_plural = ' کامنت ها'
 

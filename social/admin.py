@@ -21,3 +21,6 @@ class CommentAdmin(admin.ModelAdmin):
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ['post', 'created', 'title']
+
+
+admin.site.register(Contact)

@@ -4,7 +4,7 @@
 
 {% if user.photo %}
 <a href="{{ user.photo.url }}">
-    <img src="{% thumbnail user.photo 200x200 quality=80 %}">
+    <img src="{% thumbnail user.photo 200x100 quality=80 %}">
     {% else %}
     <img src="{% static 'images/profile/avatar-15-512.png' %}" style="width: 200px">
 </a>

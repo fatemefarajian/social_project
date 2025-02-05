@@ -3,7 +3,7 @@
 {% for user in users %}
     {% if user.photo %}
 <a href="{{user.get_absolute_url}}">
-    <img src="{% thumbnail user.photo 200x200 quality=80 %}">
+    <img src="{% thumbnail user.photo 200x100 quality=80 %}">
     </a>
     {% else %}
 <a href="{{user.get_absolute_url}}">

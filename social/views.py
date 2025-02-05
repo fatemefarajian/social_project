@@ -44,6 +44,7 @@ def edit_user(request):
         user_form = UserEditForm(instance=request.user, data=request.POST, files=request.FILES)
         if user_form.is_valid():
             user_form.save()
+        return redirect('profile')
     else:
         user_form = UserEditForm(instance=request.user)
 
@@ -240,3 +241,15 @@ def save_post(request):
         return JsonResponse({'saved':saved})
 
     return JsonResponse({'error': 'Invalid request'})
+
+
+@login_required
+def user_list(request):
+    users = User.objects.filter(is_active=True)
+    return render(request, 'user/user_list.html', {'users':users})
+
+
+@login_required
+def user_detail(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, 'user/user_detail.html', {'user':user})

@@ -13,6 +13,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ['author', 'description', 'created']
 
 
+
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ['name', 'text', 'created', 'active']

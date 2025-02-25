@@ -21,7 +21,7 @@ def log_out(request):
 def profile(request):
     user = request.user
     saved_posts = user.saved_posts.all()
-    return render(request, 'social/profile.html',{'saved_posts':saved_posts})
+    return render(request, 'social/profile.html',{'saved_posts': saved_posts})
 
 
 def register(request):
@@ -69,7 +69,8 @@ def ticket(request):
 
 
 def post_list(request, tag_slug=None):
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('author').order_by('-total_likes')
+    latest_users = User.objects.filte(is_active=True).order_by('-date_joined')[:2]
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
